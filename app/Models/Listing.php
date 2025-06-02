@@ -11,7 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Listing extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'beds', 'baths', 'area', 'city', 'code', 'street', 'street_nr', 'price',
@@ -80,9 +81,9 @@ class Listing extends Model
             fn ($query, $value) => $query->withTrashed()
         )->when(
             $filters['by'] ?? false,
-            fn ($query, $value) => ! in_array($value, $this->sortable)
-                ? $query :
-                $query->orderBy($value, $filters['order'] ?? 'desc')
+            fn ($query, $value) => in_array($value, $this->sortable)
+                ? $query->orderBy($value, $filters['order'] ?? 'desc') :
+                $query
         );
     }
 }

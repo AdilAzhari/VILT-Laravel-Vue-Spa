@@ -54,8 +54,8 @@ class ListingController extends Controller
             $listing
         );
         $listing->load(['images']);
-        $offer = ! Auth::user() ?
-            null : $listing->offers()->byMe()->first();
+        $offer = Auth::user() ?
+            $listing->offers()->byMe()->first() : null;
 
         return Inertia::render(
             'Listing/Show',
