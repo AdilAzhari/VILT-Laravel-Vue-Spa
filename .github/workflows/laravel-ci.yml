@@ -13,14 +13,32 @@ jobs:
         with:
           php-version: '8.2'
           extensions: mbstring, ctype, fileinfo, dom, curl, mysql, pdo, pdo_mysql
-          tools: composer:v2, pint
           coverage: pcov
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
       - name: Cache Composer dependencies
         uses: actions/cache@v3
         with:
           path: vendor
           key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+
+      - name: Cache Node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install Composer dependencies
+        run: |
+          composer install --prefer-dist --no-interaction
+          composer require laravel/pint phpstan/phpstan --dev --prefer-dist --no-interaction
+
+      - name: Install NPM dependencies
+        run: npm ci
 
   lint:
     needs: setup
@@ -30,10 +48,9 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          tools: pint
 
       - name: Run Laravel Pint
-        run: ./vendor/bin/pint --test
+        run: vendor/bin/pint --test
 
       - name: Run ESLint
         run: npx eslint resources/js --ext .js,.vue --fix
@@ -46,13 +63,14 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          tools: phpstan, rector
 
       - name: Run PHPStan
-        run: ./vendor/bin/phpstan analyse --memory-limit=1G
+        run: vendor/bin/phpstan analyse --memory-limit=1G
 
-      - name: Run Rector (Dry Run)
-        run: ./vendor/bin/rector process --dry-run --clear-cache
+      - name: Run Rector
+        run: |
+          composer require rector/rector --dev --prefer-dist --no-interaction
+          vendor/bin/rector process --dry-run --clear-cache
 
   security:
     needs: setup
@@ -63,7 +81,7 @@ jobs:
       - name: Check PHP vulnerabilities
         run: composer audit
       
-      - name: Check JS vulnerabilities (npm/yarn)
+      - name: Check JS vulnerabilities
         run: |
           if [ -f yarn.lock ]; then
             yarn audit --level moderate
