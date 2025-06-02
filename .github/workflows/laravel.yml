@@ -60,16 +60,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      # More reliable security check alternatives
       - name: Check PHP vulnerabilities
         run: composer audit
       
-      - name: Check JS vulnerabilities (npm)
-        run: npm audit --production
-        
-      - name: Check JS vulnerabilities (yarn)
-        if: fileExists('yarn.lock')
-        run: yarn audit --level moderate
+      - name: Check JS vulnerabilities (npm/yarn)
+        run: |
+          if [ -f yarn.lock ]; then
+            yarn audit --level moderate
+          else
+            npm audit --production
+          fi
 
   test:
     needs: [setup, lint, analyze, security]
