@@ -36,7 +36,7 @@ class OfferMade extends Notification
     public function toMail(): MailMessage
     {
         return (new MailMessage)
-            ->line("New offer ({$this->offer->amount}) was made for your listing")
+            ->line(sprintf('New offer (%s) was made for your listing', $this->offer->amount))
             ->action(
                 'See Your Listing',
                 route('realtor.listing.show', ['listing' => $this->offer->listing_id])
