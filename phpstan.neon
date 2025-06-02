@@ -1,0 +1,17 @@
+includes:
+    - vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+    paths:
+        - app
+        - config
+        - database
+        - routes
+        - tests
+    level: 5
+    excludePaths:
+        - bootstrap/*
+        - storage/*
+    scanDirectories:
+        - vendor/laravel/framework/src
+
