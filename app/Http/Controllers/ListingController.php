@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Listing;
 use App\Http\Requests\StoreListingRequest;
 use App\Http\Requests\UpdateListingRequest;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Gate;
+use App\Models\Listing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Inertia\Inertia;
 use Inertia\Response;
-
 
 class ListingController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      */
@@ -30,7 +28,7 @@ class ListingController extends Controller
             'beds',
             'baths',
             'areaFrom',
-            'areaTo'
+            'areaTo',
         ]);
 
         return Inertia::render(
@@ -41,14 +39,14 @@ class ListingController extends Controller
                     ->filter($filters)
                     ->withoutSold()
                     ->paginate(10)
-                    ->withQueryString()
+                    ->withQueryString(),
             ]
         );
     }
+
     /**
      * Display the specified resource.
      */
-
     public function show(Listing $listing): Response
     {
         Gate::authorize(
@@ -56,14 +54,14 @@ class ListingController extends Controller
             $listing
         );
         $listing->load(['images']);
-        $offer = !Auth::user() ?
+        $offer = ! Auth::user() ?
             null : $listing->offers()->byMe()->first();
 
         return Inertia::render(
             'Listing/Show',
             [
                 'listing' => $listing,
-                'offerMade' => $offer
+                'offerMade' => $offer,
             ]
         );
     }

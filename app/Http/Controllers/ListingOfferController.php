@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Offer;
 use App\Models\Listing;
-use Illuminate\Http\Request;
+use App\Models\Offer;
 use App\Notifications\OfferMade;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class ListingOfferController extends Controller
@@ -18,7 +18,7 @@ class ListingOfferController extends Controller
         $offer = $listing->offers()->save(
             Offer::query()->make(
                 $request->validate([
-                    'amount' => 'required|integer|min:1|max:20000000'
+                    'amount' => 'required|integer|min:1|max:20000000',
                 ])
             )->bidder()->associate($request->user())
         );

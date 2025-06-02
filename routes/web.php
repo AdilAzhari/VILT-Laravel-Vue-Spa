@@ -1,7 +1,7 @@
 <?php
 
-//use App\Http\Controllers\ListingController;
-//use App\Http\Controllers\ProfileController;
+// use App\Http\Controllers\ListingController;
+// use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ListingController;
 use Illuminate\Foundation\Application;
@@ -22,26 +22,25 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-//Route::middleware('auth')->group(function () {
+// Route::middleware('auth')->group(function () {
 //    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 //    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 //    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-//});
+// });
 
-//Route::resource('listings', ListingController::class);
-//require __DIR__ . '/auth.php';
+// Route::resource('listings', ListingController::class);
+// require __DIR__ . '/auth.php';
 
 use App\Http\Controllers\IndexController;
-
-//use App\Http\Controllers\ListingController;
-use App\Http\Controllers\UserAccountController;
+// use App\Http\Controllers\ListingController;
 use App\Http\Controllers\ListingOfferController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\RealtorListingController;
 use App\Http\Controllers\NotificationSeenController;
-use App\Http\Controllers\RealtorListingImageController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\RealtorListingAcceptOfferController;
+use App\Http\Controllers\RealtorListingController;
+use App\Http\Controllers\RealtorListingImageController;
+use App\Http\Controllers\UserAccountController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 Route::get('/', [IndexController::class, 'index']);
 Route::get('/hello', [IndexController::class, 'show'])

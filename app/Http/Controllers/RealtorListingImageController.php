@@ -12,6 +12,7 @@ class RealtorListingImageController extends Controller
     public function create(Listing $listing)
     {
         $listing->load(['images']);
+
         return inertia(
             'Realtor/ListingImage/Create',
             ['listing' => $listing]
@@ -22,16 +23,16 @@ class RealtorListingImageController extends Controller
     {
         if ($request->hasFile('images')) {
             $request->validate([
-                'images.*' => 'mimes:jpg,png,jpeg,webp|max:5000'
+                'images.*' => 'mimes:jpg,png,jpeg,webp|max:5000',
             ], [
-                'images.*.mimes' => 'The file should be in one of the formats: jpg, png, jpeg, webp'
+                'images.*.mimes' => 'The file should be in one of the formats: jpg, png, jpeg, webp',
             ]);
 
             foreach ($request->file('images') as $file) {
                 $path = $file->store('images', 'public');
 
                 $listing->images()->save(new ListingImage([
-                    'filename' => $path
+                    'filename' => $path,
                 ]));
             }
         }

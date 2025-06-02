@@ -13,11 +13,12 @@ class ListingImage extends Model
     use HasFactory;
 
     protected $fillable = ['filename'];
+
     protected $appends = ['src'];
 
     /**
      * Get the listing that owns the ListingImage
-    */
+     */
     public function listing(): BelongsTo
     {
         return $this->belongsTo(Listing::class);

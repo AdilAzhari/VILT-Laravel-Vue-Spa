@@ -13,7 +13,7 @@ class NotificationController extends Controller
             'Notification/Index',
             [
                 'notifications' => $request->user()
-                    ->notifications()->paginate(10)
+                    ->notifications()->paginate(10),
             ]
         );
     }

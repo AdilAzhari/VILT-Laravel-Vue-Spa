@@ -16,13 +16,13 @@ class AuthController extends Controller
     public function store(Request $request)
     {
         if (
-            !Auth::attempt($request->validate([
+            ! Auth::attempt($request->validate([
                 'email' => 'required|string|email',
-                'password' => 'required|string'
+                'password' => 'required|string',
             ]), true)
         ) {
             throw ValidationException::withMessages([
-                'email' => 'Authentication failed'
+                'email' => 'Authentication failed',
             ]);
         }
 

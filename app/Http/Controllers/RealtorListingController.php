@@ -20,7 +20,7 @@ class RealtorListingController extends Controller
         );
         $filters = [
             'deleted' => $request->boolean('deleted'),
-            ...$request->only(['by', 'order'])
+            ...$request->only(['by', 'order']),
         ];
 
         return Inertia::render(
@@ -33,7 +33,7 @@ class RealtorListingController extends Controller
                     ->withCount('images')
                     ->withCount('offers')
                     ->paginate(5)
-                    ->withQueryString()
+                    ->withQueryString(),
             ]
         );
     }
@@ -44,13 +44,14 @@ class RealtorListingController extends Controller
             'view',
             $listing
         );
+
         return Inertia::render(
             'Realtor/Show',
             [
                 'listing' => $listing->load(
                     'offers',
                     'offers.bidder'
-                )
+                ),
             ]
         );
     }
@@ -61,6 +62,7 @@ class RealtorListingController extends Controller
             'create',
             Listing::class
         );
+
         return Inertia::render('Realtor/Create');
     }
 
@@ -93,10 +95,11 @@ class RealtorListingController extends Controller
             'update',
             $listing
         );
+
         return Inertia::render(
             'Realtor/Edit',
             [
-                'listing' => $listing
+                'listing' => $listing,
             ]
         );
     }
