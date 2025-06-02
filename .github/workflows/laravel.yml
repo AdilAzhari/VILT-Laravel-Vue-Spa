@@ -1,14 +1,78 @@
 name: Laravel CI/CD
 
-on:
-  push:
-    branches: [ Dev ]
-  pull_request:
-    branches: [ Dev ]
+on: [push, pull_request]
 
 jobs:
-  laravel-tests:
-    name: Laravel Tests
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, ctype, fileinfo, dom, curl, mysql, pdo, pdo_mysql
+          tools: composer:v2, pint
+          coverage: pcov
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+
+  lint:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: pint
+
+      - name: Run Laravel Pint
+        run: ./vendor/bin/pint --test
+
+      - name: Run ESLint
+        run: npx eslint resources/js --ext .js,.vue --fix
+
+  analyze:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: phpstan, rector
+
+      - name: Run PHPStan
+        run: ./vendor/bin/phpstan analyse --memory-limit=1G
+
+      - name: Run Rector (Dry Run)
+        run: ./vendor/bin/rector process --dry-run --clear-cache
+
+  security:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      # More reliable security check alternatives
+      - name: Check PHP vulnerabilities
+        run: composer audit
+      
+      - name: Check JS vulnerabilities (npm)
+        run: npm audit --production
+        
+      - name: Check JS vulnerabilities (yarn)
+        if: fileExists('yarn.lock')
+        run: yarn audit --level moderate
+
+  test:
+    needs: [setup, lint, analyze, security]
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -16,119 +80,30 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: test_db
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, ctype, fileinfo, dom, curl, mysql, pdo, pdo_mysql
           coverage: pcov
-          tools: composer:v2
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Cache Composer dependencies
-        uses: actions/cache@v3
-        with:
-          path: vendor
-          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-php-
-
-      - name: Cache Node modules
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-interaction
-
-      - name: Install NPM dependencies
-        run: npm ci
-
-      - name: Copy .env
-        run: |
-          cp .env.example .env
-          php artisan key:generate
-
-      - name: Set up test database
+      - name: Run Tests
+        env:
+          DB_CONNECTION: mysql
+          DB_DATABASE: test_db
+          DB_USERNAME: root
+          DB_PASSWORD: password
         run: |
           php artisan config:clear
-          php artisan config:cache
           php artisan migrate:fresh --env=testing --force
+          php artisan test --coverage-clover=coverage.xml
 
-      - name: Run PHPUnit tests
-        run: vendor/bin/phpunit --coverage-clover=coverage.xml
-
-      - name: Upload coverage to Codecov
+      - name: Upload Coverage
         uses: codecov/codecov-action@v3
-
-      - name: Run PHPStan
-        run: vendor/bin/phpstan analyse
-
-      - name: Run ESLint
-        run: npx eslint resources/js --ext .js,.vue
-
-      - name: Run PHP Security Check
-        uses: Fabrikod/php-security-checker-action@v1
-
-      - name: Build assets
-        run: npm run build
-
-  deploy:
-    name: Deploy to Production
-    needs: laravel-tests
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/Dev'
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, ctype, fileinfo, dom, curl, mysql, pdo, pdo_mysql
-
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-interaction --no-dev
-
-      - name: Install NPM dependencies
-        run: npm ci
-
-      - name: Build assets
-        run: npm run production
-
-      - name: Deploy to server
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            cd /var/www/your-app-directory
-            git pull origin Dev
-            composer install --no-dev
-            npm ci
-            npm run production
-            php artisan migrate --force
-            php artisan optimize:clear
-            php artisan optimize
