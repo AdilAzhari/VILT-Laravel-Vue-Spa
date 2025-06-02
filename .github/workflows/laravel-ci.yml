@@ -39,19 +39,29 @@ jobs:
 
       - name: Install NPM dependencies
         run: npm ci
-
+          
+      - name: Cache
+        uses: actions/cache@v4.2.3
+  
+                
   lint:
     needs: setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+  
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-
+  
+      - name: Install Composer dependencies
+        run: |
+          composer install --prefer-dist --no-interaction
+          composer require laravel/pint --dev --prefer-dist --no-interaction
+  
       - name: Run Laravel Pint
         run: vendor/bin/pint --test
-
+  
       - name: Run ESLint
         run: npx eslint resources/js --ext .js,.vue --fix
 
