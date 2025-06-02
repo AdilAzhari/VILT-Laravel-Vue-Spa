@@ -26,7 +26,7 @@ class RealtorListingAcceptOfferController extends Controller
         return redirect()->back()
             ->with(
                 'success',
-                "Offer #$offer->id accepted, other offers rejected"
+                sprintf('Offer #%s accepted, other offers rejected', $offer->id)
             );
     }
 }
