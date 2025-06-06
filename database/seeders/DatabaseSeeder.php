@@ -31,10 +31,10 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test2@example.com',
         ]);
-        Listing::factory(10)->create([
+        Listing::factory(20)->create([
             'by_user_id' => 1,
         ]);
-        Listing::factory(10)->create([
+        Listing::factory(20)->create([
             'by_user_id' => 2,
         ]);
     }
