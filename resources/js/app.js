@@ -18,7 +18,7 @@ createInertiaApp({
         );
 
         return page.then((module) => {
-            module.default.layout = module.default.layout || MainLayout;
+            // module.default.layout = module.default.layout || MainLayout;
             return module;
         });
     },
@@ -31,7 +31,5 @@ createInertiaApp({
     progress: {
         color: '#4B5563',
     },
-}).then(r => {
-    r.app.component('MainLayout', MainLayout);
 });
 

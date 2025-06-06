@@ -2,6 +2,132 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Base button styles */
+.btn-base {
+    @apply inline-flex items-center justify-center px-5 py-2.5 text-base font-semibold rounded-lg
+    transition-all duration-200 transform hover:-translate-y-0.5 shadow-md;
+}
+
+/* Primary Filled Button (e.g., + New Listing, Register) */
+.btn-primary-filled {
+    @apply btn-base bg-accent-600 text-white hover:bg-accent-700
+    focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2;
+}
+
+/* Secondary Outline Button */
+.btn-secondary-outline {
+    @apply btn-base border-2 border-neutral-400 text-neutral-600
+    hover:bg-neutral-600 hover:text-white hover:border-neutral-600
+    dark:border-neutral-600 dark:text-neutral-300 dark:hover:bg-neutral-400 dark:hover:text-neutral-900
+    focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2;
+}
+
+/* Primary Outline Button */
+.btn-primary-outline {
+    @apply btn-base border-2 border-accent-600 text-accent-600
+    hover:bg-accent-600 hover:text-white hover:shadow-md
+    focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2;
+}
+
+/* Secondary Outline Button */
+.btn-secondary-outline {
+    @apply btn-base border-2 border-neutral-400 text-neutral-600
+    hover:bg-neutral-600 hover:text-white hover:border-neutral-600 hover:shadow-md
+    dark:border-neutral-600 dark:text-neutral-300 dark:hover:bg-neutral-400 dark:hover:text-neutral-900
+    focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2;
+}
+
+/* Danger Outline Button */
+.btn-danger-outline {
+    @apply btn-base border-2 border-red-500 text-red-600
+    hover:bg-red-600 hover:text-white hover:shadow-md
+    focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2;
+}
+
+/* Success Outline Button */
+.btn-success-outline {
+    @apply btn-base border-2 border-green-500 text-green-600
+    hover:bg-green-600 hover:text-white hover:shadow-md
+    focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2;
+}
+
+/* Info Outline Button */
+.btn-info-outline {
+    @apply btn-base border-2 border-blue-500 text-blue-600
+    hover:bg-blue-600 hover:text-white hover:shadow-md
+    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+}
+
+.input-text {
+    @apply w-full px-4 py-2 border rounded-md shadow-sm
+    text-neutral-800 dark:text-neutral-200
+    bg-white dark:bg-neutral-800
+    border-neutral-300 dark:border-neutral-600
+    focus:ring-accent-500 focus:border-accent-500 focus:outline-none;
+}
+
+/* Custom style for range input thumb to use accent color (as defined before) */
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: theme('colors.accent.600');
+    cursor: grab;
+    box-shadow: 0 0 0 3px rgba(theme('colors.accent.500'), 0.3);
+    transition: background .15s ease-in-out, transform .1s ease-in-out;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: theme('colors.accent.600');
+    cursor: grab;
+    box-shadow: 0 0 0 3px rgba(theme('colors.accent.500'), 0.3);
+    transition: background .15s ease-in-out, transform .1s ease-in-out;
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+    cursor: grabbing;
+    transform: scale(1.1);
+}
+
+input[type="range"]::-moz-range-thumb:active {
+    cursor: grabbing;
+    transform: scale(1.1);
+}
+
+/* Track styling for range input */
+input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    background: theme('colors.accent.100');
+    border-radius: 4px;
+}
+
+input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 8px;
+    background: theme('colors.accent.100');
+    border-radius: 4px;
+}
+
+/* Dark mode adjustments for range input */
+.dark input[type="range"]::-webkit-slider-runnable-track {
+    background: theme('colors.neutral.700');
+}
+
+.dark input[type="range"]::-moz-range-track {
+    background: theme('colors.neutral.700');
+}
+
+/* Ensure the label has base styling for consistent look */
+.label {
+    @apply block text-sm font-medium mb-1;
+}
+
 @layer components {
     .label {
         @apply block mb-1 text-gray-500 dark:text-gray-300 font-medium;
