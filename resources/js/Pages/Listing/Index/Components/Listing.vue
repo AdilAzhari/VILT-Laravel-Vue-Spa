@@ -1,5 +1,5 @@
 <template>
-  <Box>
+  <Box class="flex flex-col gap-2 p-4 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer dark:text-gray-300">
     <div>
       <Link
         :href="route('listing.show', {listing: listing.id})"
@@ -36,3 +36,5 @@ const { monthlyPayment } = useMonthlyPayment(
   props.listing.price, 2.5, 25,
 )
 </script>
+
+

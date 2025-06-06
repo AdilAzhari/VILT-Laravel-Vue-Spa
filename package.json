@@ -20,6 +20,8 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "@heroicons/vue": "^1.0.6",
+        "lodash": "^4.17.21",
         "ziggy": "^2.4.0",
         "ziggy-js": "^2.5.2"
     }
