@@ -76,7 +76,6 @@ class ListingControllerTest extends TestCase
         );
 
         // Test 3: Filtering by beds and baths
-        // Create new listings for this specific test case, associated with user
         Listing::factory()->for($this->user, 'owner')->create(['beds' => 2, 'baths' => 1]);
         Listing::factory()->for($this->user, 'owner')->create(['beds' => 3, 'baths' => 2]);
         Listing::factory()->for($this->user, 'owner')->create(['beds' => 4, 'baths' => 3]);
@@ -98,7 +97,6 @@ class ListingControllerTest extends TestCase
         );
 
         // Test 4: Filtering by area range
-        // Create new listings for this specific test case, associated with user
         Listing::factory()->for($this->user, 'owner')->create(['area' => 800]);
         Listing::factory()->for($this->user, 'owner')->create(['area' => 1200]);
         Listing::factory()->for($this->user, 'owner')->create(['area' => 1800]);
@@ -198,7 +196,7 @@ class ListingControllerTest extends TestCase
             fn(Assert $page) => $page
                 ->component('Listing/Show')
                 ->has('listing', fn(Assert $prop) => $prop->where('id', $listing->id)
-                    ->has('images', 3) // Ensure images are loaded
+                    ->has('images', 3)
                     ->etc()
                 )
                 ->where('offerMade', null) // No offer made yet
@@ -206,7 +204,7 @@ class ListingControllerTest extends TestCase
 
         // Test 2: Listing exists but user is not logged in (an edge case)
         $listingNoAuth = Listing::factory()->for($this->user, 'owner')->create(); // Use 'owner' relationship
-        $response = $this->get(route('listing.show', $listingNoAuth)); // No actingAs
+        $response = $this->get(route('listing.show', $listingNoAuth));
 
         $response->assertInertia(
             fn(Assert $page) => $page
@@ -257,7 +255,6 @@ class ListingControllerTest extends TestCase
         // Test 6: Non-existent listing
         $response = $this->actingAs($this->user)->get(route('listing.show', 99999));
         $response->assertStatus(404);
-        // Authorization test for show was moved to a separate method: test_show_authorization_failure()
     }
 
     /**

@@ -1,6 +1,9 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
 
 test('login screen can be rendered', function () {
     $response = $this->get('/login');
@@ -17,7 +20,7 @@ test('users can authenticate using the login screen', function () {
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $response->assertRedirect(route('listing.index', absolute: false));
 });
 
 test('users can not authenticate with invalid password', function () {
