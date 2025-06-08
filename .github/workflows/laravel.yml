@@ -2,9 +2,9 @@ name: Laravel CI/CD
 
 on:
   push:
-    branches: [ main, master ] # Adjust branches as needed
+    branches: [ Dev ]
   pull_request:
-    branches: [ main, master ] # Adjust branches as needed
+    branches: [ Dev ]
 
 jobs:
   setup:
