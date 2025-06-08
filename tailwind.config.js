@@ -12,11 +12,10 @@ export default {
 
     theme: {
         extend: {
-            // Add custom colors here
             colors: {
                 neutral: {
                     50: '#F8F8F8', // Lighter almost-white for backgrounds
-                    100: '#F0F0F0', // Light grey for sections
+                    100: '#F0F0F0', // Light gray for sections
                     200: '#E0E0E0',
                     300: '#CCCCCC',
                     400: '#A3A3A3',
@@ -40,15 +39,24 @@ export default {
                     800: '#7E600F',
                     900: '#624A0C',
                 },
+                gold: {
+                    50: '#FFFBEA',
+                    100: '#FFF7C3',
+                    200: '#FFF09E',
+                    300: '#FFE678',
+                    400: '#FFDB52',
+                    500: '#FFD12C', // A mid-range gold
+                    600: '#CCAA23', // Your primary gold for buttons/links
+                    700: '#99801A',
+                    800: '#665511',
+                    900: '#332B08',
+                },
             },
             // Update font families
             fontFamily: {
-                // Keep 'Inter' as your primary sans-serif for body text
                 sans: ['Inter', ...defaultTheme.fontFamily.sans],
-                // Add 'Playfair Display' for your serif headings
                 serif: ['Playfair Display', 'serif'],
             },
-            // Add animations for the hero section and features if desired
             animation: {
                 'fade-in-up': 'fade-in-up 0.6s ease-out forwards',
             },

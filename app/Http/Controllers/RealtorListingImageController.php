@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Listing;
 use App\Models\ListingImage;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 class RealtorListingImageController extends Controller
@@ -23,12 +24,15 @@ class RealtorListingImageController extends Controller
     {
         if ($request->hasFile('images')) {
             $request->validate([
+                'images' => 'required|array',
                 'images.*' => 'mimes:jpg,png,jpeg,webp|max:5000',
             ], [
                 'images.*.mimes' => 'The file should be in one of the formats: jpg, png, jpeg, webp',
             ]);
 
-            foreach ($request->file('images') as $file) {
+            /** @var array<int, UploadedFile> $files */
+            $files = $request->file('images');
+            foreach ($files as $file) {
                 $path = $file->store('images', 'public');
 
                 $listing->images()->save(new ListingImage([
@@ -40,7 +44,7 @@ class RealtorListingImageController extends Controller
         return redirect()->back()->with('success', 'Images uploaded!');
     }
 
-    public function destroy($listing, ListingImage $image)
+    public function destroy(ListingImage $image)
     {
         Storage::disk('public')->delete($image->filename);
         $image->delete();

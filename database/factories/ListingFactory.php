@@ -27,4 +27,14 @@ class ListingFactory extends Factory
             'price' => fake()->numberBetween(50_000, 2_000_000),
         ];
     }
+
+    /**
+     * Indicate that the listing has been sold.
+     */
+    public function sold(): Factory|ListingFactory
+    {
+        return $this->state(fn (array $attributes) => [
+            'sold_at' => now(),
+        ]);
+    }
 }

@@ -27,8 +27,8 @@ class RealtorListingController extends Controller
             'Realtor/Index',
             [
                 'filters' => $filters,
-                'listings' => Auth::user()
-                    ->listings()
+                'listings' => Listing::query()
+                    ->where('by_user_id', Auth::id())
                     ->filter($filters)
                     ->withCount('images')
                     ->withCount('offers')

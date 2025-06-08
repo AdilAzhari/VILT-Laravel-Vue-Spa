@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreListingRequest;
 use App\Http\Requests\UpdateListingRequest;
 use App\Models\Listing;
+use App\Models\Offer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -54,8 +55,11 @@ class ListingController extends Controller
             $listing
         );
         $listing->load(['images']);
-        $offer = Auth::user() ?
-            $listing->offers()->byMe()->first() : null;
+
+        $offer = Auth::user() ? Offer::query()
+            ->where('listing_id', $listing->id)
+            ->byMe()
+            ->first() : null;
 
         return Inertia::render(
             'Listing/Show',
