@@ -9,10 +9,9 @@ use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
-use Mockery;
 use Inertia\Testing\AssertableInertia as Assert;
+use Mockery;
 use Tests\TestCase;
-
 
 class ListingControllerTest extends TestCase
 {
@@ -43,10 +42,10 @@ class ListingControllerTest extends TestCase
 
         $response = $this->actingAs($this->user)->get(route('listing.index'));
         $response->assertInertia(
-            fn(Assert $page) => $page
+            fn (Assert $page) => $page
                 ->component('Listing/Index')
-                ->has('listings.data', 10, fn(Assert $listing) => $listing->where('sold_at', null) // Ensure sold listings are not present
-                ->etc()
+                ->has('listings.data', 10, fn (Assert $listing) => $listing->where('sold_at', null) // Ensure sold listings are not present
+                    ->etc()
                 )
                 ->has('listings.links')
                 ->has('filters', 0) // No filters applied initially
@@ -66,9 +65,9 @@ class ListingControllerTest extends TestCase
         ]));
 
         $response->assertInertia(
-            fn(Assert $page) => $page
+            fn (Assert $page) => $page
                 ->component('Listing/Index')
-                ->has('listings.data', 1, fn(Assert $listing) => $listing->where('price', 200000)
+                ->has('listings.data', 1, fn (Assert $listing) => $listing->where('price', 200000)
                     ->etc()
                 )
                 ->where('filters.priceFrom', '150000')
@@ -86,9 +85,9 @@ class ListingControllerTest extends TestCase
         ]));
 
         $response->assertInertia(
-            fn(Assert $page) => $page
+            fn (Assert $page) => $page
                 ->component('Listing/Index')
-                ->has('listings.data', 1, fn(Assert $listing) => $listing->where('beds', 3)
+                ->has('listings.data', 1, fn (Assert $listing) => $listing->where('beds', 3)
                     ->where('baths', 2)
                     ->etc()
                 )
@@ -107,9 +106,9 @@ class ListingControllerTest extends TestCase
         ]));
 
         $response->assertInertia(
-            fn(Assert $page) => $page
+            fn (Assert $page) => $page
                 ->component('Listing/Index')
-                ->has('listings.data', 1, fn(Assert $listing) => $listing->where('area', 1200)
+                ->has('listings.data', 1, fn (Assert $listing) => $listing->where('area', 1200)
                     ->etc()
                 )
                 ->where('filters.areaFrom', '1000')
@@ -134,9 +133,9 @@ class ListingControllerTest extends TestCase
         ]));
 
         $response->assertInertia(
-            fn(Assert $page) => $page
+            fn (Assert $page) => $page
                 ->component('Listing/Index')
-                ->has('listings.data', 1, fn(Assert $listing) => $listing->where('price', 400000)
+                ->has('listings.data', 1, fn (Assert $listing) => $listing->where('price', 400000)
                     ->where('beds', 3)
                     ->where('baths', 2)
                     ->where('area', 2000)
@@ -155,7 +154,7 @@ class ListingControllerTest extends TestCase
         ]));
 
         $response->assertInertia(
-            fn(Assert $page) => $page
+            fn (Assert $page) => $page
                 ->component('Listing/Index')
                 ->has('listings.data', 0)
         );
@@ -168,7 +167,7 @@ class ListingControllerTest extends TestCase
     public function test_index_authorization_failure(): void
     {
         // Clear the Gate::before handler from setUp
-        Gate::before(fn() => null);
+        Gate::before(fn () => null);
 
         // Mock the Gate facade directly
         Gate::shouldReceive('authorize')
@@ -177,7 +176,7 @@ class ListingControllerTest extends TestCase
             ->andThrow(new AuthorizationException('Unauthorized.'));
 
         // Expect the request to throw an AuthorizationException
-//        $this->expectException(AuthorizationException::class);
+        //        $this->expectException(AuthorizationException::class);
         $this->actingAs(User::factory()->create())->get(route('listing.index'));
     }
 
@@ -193,9 +192,9 @@ class ListingControllerTest extends TestCase
         $response = $this->actingAs($this->user)->get(route('listing.show', $listing));
 
         $response->assertInertia(
-            fn(Assert $page) => $page
+            fn (Assert $page) => $page
                 ->component('Listing/Show')
-                ->has('listing', fn(Assert $prop) => $prop->where('id', $listing->id)
+                ->has('listing', fn (Assert $prop) => $prop->where('id', $listing->id)
                     ->has('images', 3)
                     ->etc()
                 )
@@ -207,7 +206,7 @@ class ListingControllerTest extends TestCase
         $response = $this->get(route('listing.show', $listingNoAuth));
 
         $response->assertInertia(
-            fn(Assert $page) => $page
+            fn (Assert $page) => $page
                 ->component('Listing/Show')
                 ->has('listing')
                 ->where('offerMade', null) // Should be null for guests
@@ -220,10 +219,10 @@ class ListingControllerTest extends TestCase
         $response = $this->actingAs($this->user)->get(route('listing.show', $listingWithOffer));
 
         $response->assertInertia(
-            fn(Assert $page) => $page
+            fn (Assert $page) => $page
                 ->component('Listing/Show')
                 ->has('listing')
-                ->has('offerMade', fn(Assert $prop) => $prop->where('id', $offer->id)
+                ->has('offerMade', fn (Assert $prop) => $prop->where('id', $offer->id)
                     ->where('bidder_id', $this->user->id)
                     ->etc()
                 )
@@ -236,7 +235,7 @@ class ListingControllerTest extends TestCase
         $response = $this->actingAs($this->user)->get(route('listing.show', $listingOtherOffers));
 
         $response->assertInertia(
-            fn(Assert $page) => $page
+            fn (Assert $page) => $page
                 ->component('Listing/Show')
                 ->has('listing')
                 ->where('offerMade', null) // Current user has no offer
@@ -247,9 +246,9 @@ class ListingControllerTest extends TestCase
         $response = $this->actingAs($this->user)->get(route('listing.show', $listingNoImages));
 
         $response->assertInertia(
-            fn(Assert $page) => $page
+            fn (Assert $page) => $page
                 ->component('Listing/Show')
-                ->has('listing', fn(Assert $prop) => $prop->has('images', 0)->etc())
+                ->has('listing', fn (Assert $prop) => $prop->has('images', 0)->etc())
         );
 
         // Test 6: Non-existent listing
@@ -265,16 +264,16 @@ class ListingControllerTest extends TestCase
         $unauthorizedListing = Listing::factory()->for($this->user, 'owner')->create(); // Use 'owner' relationship
 
         // Clear the Gate::before handler from setUp
-        Gate::before(fn() => null);
+        Gate::before(fn () => null);
 
         // Mock the Gate facade directly
         Gate::shouldReceive('authorize')
             ->with('view', Mockery::type(Listing::class))
             ->once();
-//            ->andThrow(new AuthorizationException('Unauthorized.'));
+        //            ->andThrow(new AuthorizationException('Unauthorized.'));
 
         // Expect the request to throw an AuthorizationException
-//        $this->expectException(AuthorizationException::class);
+        //        $this->expectException(AuthorizationException::class);
         $this->actingAs(User::factory()->create())->get(route('listing.show', $unauthorizedListing));
     }
 }

@@ -31,10 +31,9 @@ class ListingFactory extends Factory
     /**
      * Indicate that the listing has been sold.
      */
-
     public function sold(): Factory|ListingFactory
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'sold_at' => now(),
         ]);
     }

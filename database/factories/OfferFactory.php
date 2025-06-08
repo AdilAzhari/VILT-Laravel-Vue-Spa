@@ -26,10 +26,6 @@ class OfferFactory extends Factory
         ];
     }
 
-    /**
-     * @return OfferFactory|Factory
-     */
-
     public function lowerOffer(): OfferFactory|Factory
     {
         return $this->state(function () {

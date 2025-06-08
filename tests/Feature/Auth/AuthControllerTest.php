@@ -15,7 +15,7 @@ class AuthControllerTest extends TestCase
         $response = $this->get(route('login'));
 
         $response->assertStatus(200);
-        $response->assertInertia(fn($page) => $page->component('Auth/Login'));
+        $response->assertInertia(fn ($page) => $page->component('Auth/Login'));
     }
 
     public function test_users_can_authenticate_using_the_login_screen()
@@ -58,7 +58,7 @@ class AuthControllerTest extends TestCase
 
     public function test_login_rate_limiting()
     {
-//        $this->withoutExceptionHandling();
+        //        $this->withoutExceptionHandling();
 
         $user = User::factory()->create();
 
@@ -80,9 +80,9 @@ class AuthControllerTest extends TestCase
 
         $errorMessage = session()->get('errors')->getBag('default')->first('email');
 
-//        $this->assertStringContainsString(
-//            'Too many login attempts.',
-//            $errorMessage
-//        );
+        //        $this->assertStringContainsString(
+        //            'Too many login attempts.',
+        //            $errorMessage
+        //        );
     }
 }

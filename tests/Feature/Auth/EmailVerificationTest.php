@@ -29,12 +29,12 @@ test('email can be verified', function () {
         ['id' => $user->id, 'hash' => sha1($user->email)]
     );
 
-//    $response = $this->actingAs($user)->get($verificationUrl);
+    //    $response = $this->actingAs($user)->get($verificationUrl);
 
-//    Event::assertDispatched(Verified::class);
-//    expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
-//
-//    $response->assertRedirect(route('home', absolute: false) . '?verified=1');
+    //    Event::assertDispatched(Verified::class);
+    //    expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
+    //
+    //    $response->assertRedirect(route('home', absolute: false) . '?verified=1');
 });
 
 test('email is not verified with invalid hash', function () {

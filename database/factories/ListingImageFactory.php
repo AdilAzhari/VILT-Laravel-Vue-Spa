@@ -18,7 +18,7 @@ class ListingImageFactory extends Factory
     public function definition(): array
     {
         return [
-            'filename' => $this->faker->uuid() . '.jpg',
+            'filename' => $this->faker->uuid().'.jpg',
             'listing_id' => Listing::factory(),
         ];
     }
