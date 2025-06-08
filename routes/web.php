@@ -10,8 +10,8 @@ use App\Http\Controllers\RealtorListingAcceptOfferController;
 use App\Http\Controllers\RealtorListingController;
 use App\Http\Controllers\RealtorListingImageController;
 use App\Http\Controllers\UserAccountController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -55,18 +55,26 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
         $request->fulfill();
+
         return redirect()->route('listing.index')->with('success', 'Email was verified!');
     })->middleware(['signed'])->name('verification.verify');
 
     Route::post('/email/verification-notification', function (Request $request) {
         $request->user()->sendEmailVerificationNotification();
+
         return back()->with('success', 'Verification link sent!');
     })->middleware(['throttle:6,1'])->name('verification.send');
 });
 
-
 // --- Authenticated User Routes ---
 Route::middleware(['auth', 'verified'])->group(function () {
+
+    Route::get('profile', function () {
+        return Inertia::render('Profile/Edit', [
+            'user' => auth()->user(),
+        ]);
+    })->name('profile.edit');
+
     Route::get('/dashboard', fn () => Inertia::render('Dashboard'))->name('dashboard');
     Route::get('/hello', [IndexController::class, 'show']); // Consider if 'hello' is still needed or can be integrated elsewhere
 
@@ -94,4 +102,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 });
 
-require __DIR__ . '/auth.php'; // Keep this if you're using Laravel Breeze/Jetstream for auth scaffolding
+require __DIR__.'/auth.php';
