@@ -1,4 +1,4 @@
-****# VILT Stack Real Estate SPA
+# VILT Stack Real Estate SPA
 
 A modern Single Page Application (SPA) built with the VILT stack (Vue.js, Inertia.js, Laravel, and Tailwind CSS) for real estate property listings and management.
 
@@ -31,12 +31,11 @@ The VILT stack combines:
 
 | Dependency | Version |
 |------------|---------|
-| PHP        | ^8.1    |
-| Laravel    | ^10.0   |
-| Vue.js     | ^3.2    |
-| Node.js    | ^16.0   |
-| MySQL      | ^5.7    |
-| PostgreSQL | ^9.6    |
+| PHP        | ^8.2    |
+| Laravel    | ^12.0   |
+| Vue.js     | ^5.0    |
+| Node.js    | ^18.8   |
+| MySQL      | ^8.0    |
 
 ## Browser Support
 
@@ -74,25 +73,25 @@ The application is also compatible with modern mobile browsers.
 
 ## Tech Stack
 
-- **Backend**: Laravel 10.x
-- **Frontend**: Vue.js 3.x with Inertia.js
+- **Backend**: Laravel 12.x
+- **Frontend**: Vue.js 5.x with Inertia.js
 - **Styling**: Tailwind CSS
-- **Database**: MySQL/PostgreSQL
+- **Database**: MySQL/SQLite
 - **Testing**: PHPUnit with Pest PHP
 - **Static Analysis**: PHPStan
 
 ## Requirements
 
-- PHP >= 8.1
-- Node.js >= 16.x
+- PHP >= 8.2
+- Node.js >= 18.x
 - Composer
-- MySQL >= 5.7 or PostgreSQL >= 9.6
+- MySQL >= 8.0
 
 ## Installation
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/AdilAzhari/VILT-Laravel-Vue-Spa
 cd VILT-Laravel-Vue-Spa
 ```
 
